@@ -4,15 +4,15 @@
       <div id="calculator">
         <div id="result">
           <div id="history">
-            <p id="history-value" v-cloak>{{ formula }}</p>
+            <p id="history-value" v-cloak>{{ history }}</p>
           </div>
           <div id="output">
             <p id="output-value" v-cloak>{{ result }}</p>
           </div>
         </div>
-        <div id="keyboard">
-          <button @click="drop()" class="operator">C</button>
-          <button @click="cleanResult()" class="operator">CE</button>
+        <div id="btn">
+          <button @click="C()" class="operator">C</button>
+          <button @click="CE()" class="operator">CE</button>
           <button @click="operate('%')" class="operator">%</button>
           <button @click="operate('/')" class="operator">&#247;</button>
           <button @click="operate(7)" class="number">7</button>
@@ -27,10 +27,14 @@
           <button @click="operate(2)" class="number">2</button>
           <button @click="operate(3)" class="number">3</button>
           <button @click="operate('+')" class="operator">+</button>
-          <button class="empty"></button>
+          <button class="empty">
+            <img class="img" src="../assets/logo.png" />
+          </button>
           <button @click="operate(0)" class="number">0</button>
-          <button class="empty"></button>
-          <button @click="equal()" class="operator">=</button>
+          <button class="empty">
+            <img class="img" src="../assets/logo.png" />
+          </button>
+          <button @click="results()" class="operator">=</button>
         </div>
       </div>
     </div>
@@ -42,61 +46,36 @@ export default {
   name: "Calculator",
   data() {
     return {
-      formula: "",
+      history: "",
       result: 0
     };
   },
   methods: {
     operate(element) {
-      console.log("operate..");
-      this.formula += element;
-      // console.log("this.formula:");
-      // console.log(this.formula);
+      this.history += element;
     },
-    equal() {
-      console.log("equal..");
-      this.result = eval(this.formula);
-      // console.log("this.formula:");
-      // console.log(this.formula);
+    results() {
+      this.result = eval(this.history);
     },
-    cleanResult() {
-      console.log("cleanResult..");
+    CE() {
       this.result = 0;
-      this.formula = "";
+      this.history = "";
     },
     cleanAll() {
-      console.log("cleanAll..");
-      this.formula = "";
+      this.history = "";
       this.result = 0;
     },
-    drop() {
-      console.log("drop..");
-      this.formula = this.formula.slice(0, -1);
-    },
-    square() {
-      console.log("square..");
-      console.log(eval(this.formula));
-      eval(this.formula) < 0
-        ? (this.formula = "Can not suqre the negative value")
-        : (this.result = Math.sqrt(eval(this.formula)));
-    },
-    devided() {
-      console.log("devided..");
-      this.formula === "" ||
-      this.formula.endsWith("+" || "-" || "*" || "/" || "%")
-        ? {}
-        : (this.formula = "1/(" + this.formula + ")");
-      this.equal();
+    C() {
+      this.history = this.history.slice(0, -1);
     },
     toggle() {
-      console.log("toggle..");
-      this.formula === "" ||
-      this.formula.endsWith("+" || "-" || "*" || "/" || "%")
+      this.history === "" ||
+      this.history.endsWith("+" || "-" || "*" || "/" || "%")
         ? {}
-        : this.formula.startsWith("-")
-        ? (this.formula = Math.abs(eval(this.formula)).toString())
-        : (this.formula = "-(" + this.formula + ")");
-      this.equal();
+        : this.history.startsWith("-")
+        ? (this.history = Math.abs(eval(this.history)).toString())
+        : (this.history = "-(" + this.history + ")");
+      this.results();
     }
   }
 };
@@ -140,7 +119,7 @@ body {
   font-size: 30px;
   background-color: #e7e7e7;
 }
-#keyboard {
+#btn {
   height: 400px;
 }
 .operator,
@@ -154,6 +133,10 @@ body {
   border-width: 0;
   font-weight: bold;
   font-size: 15px;
+}
+.img {
+  width: 95%;
+  height: 90%;
 }
 .number,
 .empty {
